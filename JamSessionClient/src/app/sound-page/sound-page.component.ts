@@ -12,9 +12,16 @@ export class SoundPageComponent implements OnInit {
   ngOnInit() {
   }
 
-  playSound() {
+  playSound1() {
     const audio = new Audio();
     audio.src = '../../assets/2.mp3';
+    audio.load();
+    audio.play();
+  }
+
+  playSound2() {
+    const audio = new Audio();
+    audio.src = '../../assets/1.mp3';
     audio.load();
     audio.play();
   }
