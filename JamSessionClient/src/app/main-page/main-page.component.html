@@ -1,8 +1,9 @@
-<div>
-  <mat-card>
-    <button mat-button>Info</button>
-  </mat-card>
-</div>
+<mat-card class="mainNavigationBar">
+    <button mat-button (click)="changeForSessionPage()">Session</button>
+    <button mat-button (click)="changeForSoundsPage()">Sounds</button>
+    <button mat-button (click)="changeForInfoPage()">Info</button>
+</mat-card>
 <div>
   <app-info-page *ngIf="showInfo"></app-info-page>
+  <app-sound-page *ngIf="showSounds"></app-sound-page>
 </div>

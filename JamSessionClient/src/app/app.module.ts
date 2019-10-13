@@ -43,12 +43,14 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainPageComponent } from './main-page/main-page.component';
 import { InfoPageComponent } from './info-page/info-page.component';
+import { SoundPageComponent } from './sound-page/sound-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainPageComponent,
-    InfoPageComponent
+    InfoPageComponent,
+    SoundPageComponent
   ],
   imports: [
     BrowserModule,

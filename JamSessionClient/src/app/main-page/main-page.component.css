@@ -1,3 +1,10 @@
 .margin {
     margin: 5%;
 }
+.mainNavigationBar {
+    width: 95%;
+    margin-left: 2%;
+}
+.alignButton {
+    align-items: center;
+}
