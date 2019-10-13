@@ -1,0 +1,14 @@
+.margin {
+    margin: 2%;
+}
+.developer {
+    width: 700px;
+    margin-left: 30%;
+    text-align: center;
+}
+.beschreibung {
+    width: 700px;
+    margin-left: 30%;
+    margin-top: 5%;
+    text-align: center;
+}

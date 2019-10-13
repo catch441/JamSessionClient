@@ -9,6 +9,8 @@ export class MainPageComponent implements OnInit {
 
   constructor() { }
 
+  showInfo = true;
+
   ngOnInit() {
   }
 
