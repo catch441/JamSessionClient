@@ -2,6 +2,5 @@
   <mat-card-title>
     Hier kannst dir einmal alle Sounds anhören
   </mat-card-title>
-  <button mat-raised-button (click)="playSound1()">Long</button>
-  <button mat-raised-button (click)="playSound2()">Short</button>
+    <button *ngFor="let sound of allSounds" mat-raised-button (click)="playSound(sound.src)" class="buttons">{{sound.name}}</button>
 </mat-card>
