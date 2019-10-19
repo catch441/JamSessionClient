@@ -1,0 +1,12 @@
+<mat-card class="sessionCard">
+  <mat-label>Aktuelle Sessions</mat-label>
+  <button mat-icon-button (click)="requestAllSessions()"><mat-icon>refresh</mat-icon></button>
+  <mat-spinner *ngIf="spinningBool" class="spinning"></mat-spinner>
+  <p></p>
+  <mat-divider inset="true"></mat-divider>
+  <p></p>
+  <mat-error *ngIf="noSessions">Hoppla, keine Sessions vorhanden</mat-error>
+  <div *ngFor="let session of sessions">
+    <mat-label>Session Name: {{session}}</mat-label>
+  </div>
+</mat-card>

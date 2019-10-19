@@ -44,15 +44,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainPageComponent } from './main-page/main-page.component';
 import { InfoPageComponent } from './info-page/info-page.component';
 import { SoundPageComponent } from './sound-page/sound-page.component';
+import { SessionPageComponent } from './session-page/session-page.component';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     MainPageComponent,
     InfoPageComponent,
-    SoundPageComponent
+    SoundPageComponent,
+    SessionPageComponent
   ],
   imports: [
+    HttpClientModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,

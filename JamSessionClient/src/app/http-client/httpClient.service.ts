@@ -1,6 +1,6 @@
 import { OnInit } from '@angular/core';
-import { HttpClient } from 'selenium-webdriver/http';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export class HttpClientService implements OnInit {
 
@@ -10,6 +10,10 @@ export class HttpClientService implements OnInit {
     errorBoolean = false;
 
     ngOnInit() {}
+
+    getHttpAllSessions(): Observable<Array<string>> {
+      return this.http.get<Array<string>>('http://localhost:8080/jamSessions');
+    }
 
     // handles response errors from request
   handleError(error: HttpErrorResponse) {
