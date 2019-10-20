@@ -5,10 +5,15 @@
     width: 700px;
     margin-left: 30%;
     text-align: center;
+    color: white;
 }
 .beschreibung {
     width: 700px;
     margin-left: 30%;
     margin-top: 5%;
     text-align: center;
+}
+.transparent {
+    background: rgba(256, 256, 256, 0.5);
+    box-shadow: 0 0 11px rgba(33,33,33,.2);
 }

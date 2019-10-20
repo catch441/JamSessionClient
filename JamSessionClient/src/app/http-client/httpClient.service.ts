@@ -1,6 +1,7 @@
 import { OnInit } from '@angular/core';
 import { HttpErrorResponse, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { SoundInterface } from './SoundInterface';
 
 export class HttpClientService implements OnInit {
 
@@ -10,11 +11,34 @@ export class HttpClientService implements OnInit {
     errorBoolean = false;
 
     ngOnInit() {}
-
-    getHttpAllSessions(): Observable<Array<string>> {
+    // http anfrage für alle verfügbaren Sessions
+    getAllSessions(): Observable<Array<string>> {
       return this.http.get<Array<string>>('http://localhost:8080/jamSessions');
     }
-
+    // http anfrage für alle pitches
+    getAllPitches(): Observable<Array<string>> {
+      return this.http.get<Array<string>>('http://localhost:8080/pitches');
+    }
+    // http anfrage für alle soundfiles in einer session
+    // noch nicht getestet
+    // Rückgabetyp unklar!!!!!!!!!!!!!!!!!!
+    getAllSoundfilesForAJamSession(jamSessionName: string, playerName: string): Observable<Array<string>> {
+      // tslint:disable-next-line:max-line-length
+      return this.http.get<Array<string>>('http://localhost:8080/jamSessionSounds?jamSessionName=' + jamSessionName + '&player=' + playerName);
+    }
+    // http anfrage für alle verfügbaren Instrumente
+    getAllInstruments(): Observable<Array<string>> {
+      return this.http.get<Array<string>>('http://localhost:8080/instruments');
+    }
+    // http anfrage für alle verfügbaren Effekte
+    getAllEffects(): Observable<Array<string>> {
+      return this.http.get<Array<string>>('http://localhost:8080/effects');
+    }
+    // http post um Sound zu einem Spieler hinzuzufügen
+    addSoundToPlayer(jamSessionName: string, playerName: string, sound: SoundInterface): Observable<any> {
+      // tslint:disable-next-line:max-line-length
+      return this.http.post<any>('http://localhost:8080/jamSessionSounds?jamSessionName=' + jamSessionName + '&player=' + playerName, sound);
+    }
     // handles response errors from request
   handleError(error: HttpErrorResponse) {
     if (typeof error !== 'undefined') {
