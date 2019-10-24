@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse,HttpResponse } from '@angular/common/http';
 import { HttpClientService } from '../http-client/httpClient.service';
 import { SoundInterface } from '../http-client/SoundInterface';
 
@@ -11,7 +11,7 @@ import { SoundInterface } from '../http-client/SoundInterface';
 export class SessionPageComponent extends HttpClientService implements OnInit {
 
   spinningBool = false;
-  sessions: Array<string>;
+  sessions: Array<String>;
   pitches: Array<string>;
   soundfiles: Array<string>;
   instruments: Array<string>;
@@ -19,6 +19,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   noSessions = false;
   selectedSessionName: string;
   playerName: string;
+  fileUrl: string;
 
   constructor(private http2: HttpClient) {
     super(http2);
@@ -30,7 +31,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   // Anfrage für alle Sessions
   requestAllSessions() {
     this.spinningBool = true;
-    this.getAllSessions().subscribe((data: Array<string>) => {
+    this.getAllSessions().subscribe((data: Array<String>) => {
       this.sessions = data;
       this.spinningBool = false;
       if (this.sessions.length === 0) {
@@ -57,11 +58,20 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   requestAllSounds() {
     if (this.selectedSessionName !== null && this.playerName !== null) {
       // this.getAllSoundfilesForAJamSession(this.selectedSessionName, this.playerName)
-       this.getAllSoundfilesForAJamSession(this.selectedSessionName, this.playerName).subscribe((data: Array<string>) => {
-         this.soundfiles = data;
-       }, error => {
-         this.handleError(error);
-       });
+      this.getSoundFile("DRUM","CRASH","NOISE").subscribe((data: HttpResponse<ArrayBuffer>) => {
+        const blob = new Blob([data.body],{ 'type' : 'audio/wav; codecs=0' });
+        const url = window.URL.createObjectURL(blob);
+        //console.log(url);
+        console.log("test");
+        const audio = new Audio();
+        audio.src = url;
+        this.fileUrl = url;
+        audio.load();
+        //audio.play();*/
+      }, error => {
+        this.handleError(error);
+        console.log("test2");
+      });
     } else {
       // iwie noch ein Error Anzeigen
     }

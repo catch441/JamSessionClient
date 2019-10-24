@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClientService } from '../http-client/httpClient.service';
+
 
 export interface Sounds {
   name: string;
@@ -11,9 +14,11 @@ export interface Sounds {
   styleUrls: ['./sound-page.component.css']
 })
 
-export class SoundPageComponent implements OnInit {
+export class SoundPageComponent extends HttpClientService implements OnInit {
 
-  constructor() { }
+  constructor(private http2: HttpClient) {
+    super(http2);
+  }
 
   allSounds: Sounds [] = [
     {name: 'Long', src: '../../assets/2.mp3'},
@@ -24,9 +29,10 @@ export class SoundPageComponent implements OnInit {
   }
 
   playSound(src: string) {
+
     const audio = new Audio();
     audio.src = src;
     audio.load();
     audio.play();
-  }
+ }
 }

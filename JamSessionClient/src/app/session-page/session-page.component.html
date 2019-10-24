@@ -1,6 +1,8 @@
 <mat-card class="sessionCard">
   <mat-label>Aktuelle Sessions</mat-label>
   <button mat-icon-button (click)="requestAllSessions()"><mat-icon>refresh</mat-icon></button>
+  <button mat-raised-button (click)="requestAllSounds()"><mat-icon>request all sounds</mat-icon></button>
+
   <mat-spinner *ngIf="spinningBool" class="spinning"></mat-spinner>
   <p></p>
   <mat-divider inset="true"></mat-divider>
@@ -9,4 +11,6 @@
   <div *ngFor="let session of sessions">
     <mat-label>Session Name: {{session}}</mat-label>
   </div>
+  <a href="{{ fileUrl }}" download="test.wav">download</a>
+
 </mat-card>

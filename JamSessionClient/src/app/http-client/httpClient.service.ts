@@ -1,5 +1,5 @@
 import { OnInit } from '@angular/core';
-import { HttpErrorResponse, HttpClient } from '@angular/common/http';
+import { HttpErrorResponse, HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SoundInterface } from './SoundInterface';
 
@@ -22,9 +22,9 @@ export class HttpClientService implements OnInit {
     // http anfrage für alle soundfiles in einer session
     // noch nicht getestet
     // Rückgabetyp unklar!!!!!!!!!!!!!!!!!!
-    getAllSoundfilesForAJamSession(jamSessionName: string, playerName: string): Observable<Array<string>> {
+    getSoundFile(instrument: string,pitch:string,effect:string): Observable<HttpResponse<ArrayBuffer>> {
       // tslint:disable-next-line:max-line-length
-      return this.http.get<Array<string>>('http://localhost:8080/jamSessionSounds?jamSessionName=' + jamSessionName + '&player=' + playerName);
+      return this.http.get<HttpResponse<ArrayBuffer>>('http://localhost:8080/jamSessionSoundFiles?instrumentType=' + instrument + '&pitchType=' + pitch + '&effectType=' + effect);
     }
     // http anfrage für alle verfügbaren Instrumente
     getAllInstruments(): Observable<Array<string>> {
