@@ -22,9 +22,10 @@ export class HttpClientService implements OnInit {
     // http anfrage für alle soundfiles in einer session
     // noch nicht getestet
     // Rückgabetyp unklar!!!!!!!!!!!!!!!!!!
-    getSoundFile(instrument: string,pitch:string,effect:string): Observable<HttpResponse<ArrayBuffer>> {
+    getSoundFile(instrument: string, pitch: string, effect: string): Observable<Blob> {
       // tslint:disable-next-line:max-line-length
-      return this.http.get<HttpResponse<ArrayBuffer>>('http://localhost:8080/jamSessionSoundFiles?instrumentType=' + instrument + '&pitchType=' + pitch + '&effectType=' + effect);
+      return this.http.get('http://localhost:8080/jamSessionSoundFiles?instrumentType=' + instrument
+                            + '&pitchType=' + pitch + '&effectType=' + effect, { responseType: 'blob' });
     }
     // http anfrage für alle verfügbaren Instrumente
     getAllInstruments(): Observable<Array<string>> {
