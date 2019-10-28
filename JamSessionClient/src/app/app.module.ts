@@ -46,6 +46,7 @@ import { InfoPageComponent } from './info-page/info-page.component';
 import { SoundPageComponent } from './sound-page/sound-page.component';
 import { SessionPageComponent } from './session-page/session-page.component';
 import { HttpClientModule } from '@angular/common/http';
+import { CreateDialogComponent } from './create-dialog/create-dialog.component';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { HttpClientModule } from '@angular/common/http';
     MainPageComponent,
     InfoPageComponent,
     SoundPageComponent,
-    SessionPageComponent
+    SessionPageComponent,
+    CreateDialogComponent
   ],
   imports: [
     HttpClientModule,
@@ -97,6 +99,9 @@ import { HttpClientModule } from '@angular/common/http';
   MatTooltipModule,
   MatTreeModule,
   MatFormFieldModule,
+  ],
+  entryComponents: [
+    CreateDialogComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

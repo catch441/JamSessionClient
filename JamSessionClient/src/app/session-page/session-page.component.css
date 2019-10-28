@@ -6,3 +6,28 @@
 .spinnig {
     size: 50%;
 }
+.sessionCardHeader {
+    margin-top: 10px;
+    background: rgba(139,102,139, 0.8);
+    box-shadow: 0 0 11px rgba(33,33,33,.2);
+    border-radius: 2px 2px 0px 0px;
+}
+.sessionCardContent {
+    display: flex;
+    border-radius: 0px;
+    background: rgba(139,102,139, 0.6);
+    box-shadow: 0 0 11px rgba(33,33,33,.2);
+    height: 70vh;
+}
+.newButton {
+    background-color: rgb(205,0,205,1);
+    margin-left: 10px;
+}
+.refreshButton {
+    margin-left: 10px;
+    background-color: rgb(148,0,211);
+}
+.sessionCardLabel {
+    font-weight: bolder;
+    font-size: 20px;
+}

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { HttpClientService } from '../http-client/httpClient.service';
+import { MatDialog } from '@angular/material';
+import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 
 @Component({
   selector: 'app-session-page',
@@ -18,9 +20,8 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   noSessions = false;
   selectedSessionName: string;
   playerName: string;
-  fileUrl: string;
 
-  constructor(private http2: HttpClient) {
+  constructor(private http2: HttpClient, public dialog: MatDialog) {
     super(http2);
   }
 
@@ -56,20 +57,15 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   // Anfrage für alle verfügbaren Soundfiles (nicht getestet)
   requestAllSounds() {
     if (this.selectedSessionName !== null && this.playerName !== null) {
-      // this.getAllSoundfilesForAJamSession(this.selectedSessionName, this.playerName)
       this.getSoundFile('DRUM', 'CRASH', 'NOISE').subscribe((data: Blob) => {
         const blob = new Blob([data], { type : 'audio/wav; codecs=0' });
         const url = URL.createObjectURL(blob);
-        // console.log(url);
-        console.log('test');
         const audio = new Audio();
         audio.src = url;
-        // this.fileUrl = url;
         audio.load();
         audio.play();
       }, error => {
         this.handleError(error);
-        console.log('test2');
       });
     } else {
       // iwie noch ein Error Anzeigen
@@ -92,6 +88,17 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
     }, error => {
       this.handleError(error);
     });
+  }
+
+  openCreateDialog() {
+    const dialogRef = this.dialog.open(CreateDialogComponent,
+      {
+        // panelClass: 'create-dialog', // this is a css class from styles.css
+      });
+
+    dialogRef.afterClosed().subscribe(data => {
+
+      });
   }
 
   // hinzufügen von sound an einen player (nicht getestet)
