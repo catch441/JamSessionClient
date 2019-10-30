@@ -6,10 +6,13 @@
 <mat-card class="sessionCardContent">
     <mat-spinner *ngIf="spinningBool" class="spinning"></mat-spinner>
     <p></p>
-    <mat-divider inset="true"></mat-divider>
-    <p></p>
     <mat-error *ngIf="noSessions">Hoppla, keine Sessions vorhanden</mat-error>
+    <!--table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    </table-->
+
+
     <div *ngFor="let session of sessions">
-      <mat-label>Session Name: {{session}}</mat-label>
+      <mat-card class="sessionListCard">Session Name: {{session}}</mat-card>
     </div>
 </mat-card>

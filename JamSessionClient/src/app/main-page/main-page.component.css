@@ -2,9 +2,15 @@
     margin: 5%;
 }
 .mainNavigationBar {
-    width: 95%;
-    margin-left: 2%;
+    background-color: rgb(74.1,12.9,55.7);
+    color: white;
 }
 .overlayMargin {
     margin-left: 2%;
+}
+.titel {
+    font-weight: bolder;
+}
+.button {
+    margin-left: 5px;
 }

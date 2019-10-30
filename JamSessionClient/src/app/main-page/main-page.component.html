@@ -1,8 +1,12 @@
-<mat-card class="mainNavigationBar">
-    <button mat-button (click)="changeForSessionPage()">Session</button>
-    <button mat-icon-button (click)="changeForSoundsPage()"><mat-icon>music_note</mat-icon>Sounds</button>
-    <button mat-button (click)="changeForInfoPage()" class="overlayMargin">Info</button>
-</mat-card>
+<mat-toolbar class="mainNavigationBar">
+  <mat-toolbar-row>
+    <span class="titel">Jam Session</span>
+    <button class="button" mat-button (click)="changeForSessionPage()">Session</button>
+    <button class="button" mat-button (click)="changeForSoundsPage()"><mat-icon>music_note</mat-icon>Sounds</button>
+    <button class="button" mat-button (click)="changeForInfoPage()">Info</button>
+  </mat-toolbar-row>
+</mat-toolbar>
+
 <div>
   <app-info-page *ngIf="showInfo"></app-info-page>
   <app-sound-page *ngIf="showSounds"></app-sound-page>
