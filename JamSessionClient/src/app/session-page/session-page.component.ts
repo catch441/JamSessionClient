@@ -4,6 +4,7 @@ import { HttpClientService } from '../http-client/httpClient.service';
 import { MatDialog } from '@angular/material';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { SessionClient } from '../create-dialog/SessionClient';
+import { StompSubscription } from '@stomp/stompjs';
 
 @Component({
   selector: 'app-session-page',
@@ -23,7 +24,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   playerName: string;
 
   client: SessionClient;
-  currentSubscription = null;
+  subscription: StompSubscription;
 
   constructor(private http2: HttpClient, public dialog: MatDialog) {
     super(http2);
@@ -82,13 +83,15 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
       if(data != undefined) {
         this.client = data;
         // funktioniert noch nicht
-        /*
-        this.currentSubscription = this.client.client.subscribe('/app/jamsession/' + data.sessionId, (message) => {
-          console.log('test');
-          console.log(message);
+        this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
+          console.log("test");
+          const body = JSON.parse(message.body);
+          if(body.type = "JOIN") {
+            this.updateSoundIdList();
+          }
         }, error => {
           this.errorBoolean = true;
-        });*/
+        });
         this.client.client.send('/app/jamsession/' + data.sessionId + '/sendChatMessage',
         {},
         JSON.stringify({sender: data.user, type: 'JOIN'})
@@ -110,23 +113,23 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
     dialogRef.afterClosed().subscribe(data => {
       if(data != undefined) {
         this.client = data;
-        // funktioniert noch nicht
-        /*
-        this.currentSubscription = this.client.client.subscribe('/app/jamsession/' + data.sessionId, (message) => {
-          console.log('test');
-          console.log(message);
+        this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
+          const body = JSON.parse(message.body);
+          if(body.type = "JOIN") {
+            this.updateSoundIdList();
+          }
         }, error => {
           this.errorBoolean = true;
-        });*/
+        });
+        this.client.client.send('/jamsession/' + data.sessionId + '/sendChatMessage',{},
+        JSON.stringify({sender: data.user, type: 'JOIN'}));
       }
     });
   }
 
-
   private updateSoundIdList() {
     this.getAllSoundIdsForSession(this.client.sessionId,this.client.password).subscribe(response => {
       this.client.sounds = response;
-      console.log(this.client.sounds);
     }, error => {
       //handle error
     });
