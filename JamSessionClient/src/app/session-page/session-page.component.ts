@@ -84,7 +84,6 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
         this.client = data;
         // funktioniert noch nicht
         this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
-          console.log("test");
           const body = JSON.parse(message.body);
           if(body.type = "JOIN") {
             this.updateSoundIdList();
