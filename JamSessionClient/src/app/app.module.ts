@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
   MatButtonModule,
   MatAutocompleteModule,
@@ -59,6 +60,8 @@ import { CreateDialogComponent } from './create-dialog/create-dialog.component';
     CreateDialogComponent
   ],
   imports: [
+    FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,

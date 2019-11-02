@@ -1,0 +1,62 @@
+.createButton {
+    background-color: rgb(74.1,12.9,55.7);
+    color: white;
+    margin-left: 10px;
+}
+.joinButton {
+    background-color: rgb(74.1,12.9,55.7);
+    color: white;
+    margin-left: 10px;
+}
+.closeButton {
+    background-color: rgb(74.1,12.9,55.7);
+    color: white;
+    margin-left: 10px;
+}
+.text {
+    color: rgb(74.1,12.9,55.7);
+    font-weight: bolder;
+    font-size: 25px;
+}
+.fields {
+    margin-left: 10px;
+    color: white;
+}
+.mat-error {
+    color: darkred;
+    font-weight: bolder;
+}
+::ng-deep .mat-select-value-text {
+    color: white !important;
+  }
+::ng-deep .mat-select-placeholder {
+    color:white !important;
+}
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: white;
+    opacity: 1; /* Firefox */
+}
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+    color: black;
+}
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline {
+    color: black; 
+}
+::ng-deep .mat-form-field.mat-focused .mat-form-field-label {
+    color: black !important;
+    font-weight: bolder !important;
+}
+::ng-deep .mat-form-field .mat-form-field-label {
+    color: black !important;
+}
+::ng-deep .mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle , .mat-radio-outer-circle {
+    border-color: rgb(74.1,12.9,55.7) !important;
+}
+  
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle{
+    background-color: rgb(74.1,12.9,55.7) !important;
+}
+.mat-radio-button {
+    margin-left: 10px;
+    color: white;
+}

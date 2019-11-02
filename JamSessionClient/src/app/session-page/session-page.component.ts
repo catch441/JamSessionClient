@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpClientService } from '../http-client/httpClient.service';
 import { MatDialog } from '@angular/material';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
+import { SessionClient } from '../create-dialog/SessionClient';
 
 @Component({
   selector: 'app-session-page',
@@ -20,6 +21,9 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   noSessions = false;
   selectedSessionName: string;
   playerName: string;
+
+  client: SessionClient;
+  currentSubscription = null;
 
   constructor(private http2: HttpClient, public dialog: MatDialog) {
     super(http2);
@@ -45,15 +49,6 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
     });
   }
 
-  // Anfrage für alle verfügbaren Pitches (getestet, es funktioniert)
-  requestAllPitches() {
-    this.getAllPitches().subscribe((data: Array<string>) => {
-      this.pitches = data;
-    }, error => {
-      this.handleError(error);
-    });
-  }
-
   // Anfrage für alle verfügbaren Soundfiles (nicht getestet)
   requestAllSounds() {
     if (this.selectedSessionName !== null && this.playerName !== null) {
@@ -72,46 +67,68 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
     }
   }
 
-  // anfrage für alle verfügbaren Instrument (getestet, es funktioniert)
-  requestAllInstruments() {
-    this.getAllInstruments().subscribe((data: Array<string>) => {
-      this.instruments = data;
-    }, error => {
-      this.handleError(error);
-    });
-  }
+  openJoinDialog(session: string) {
+    const dialogRef = this.dialog.open(CreateDialogComponent,
+      {
+        width: '500px',
+        panelClass: 'create-dialog', // this is a css class from styles.css
+        data: {
+          onlyJoin: true,
+          sessionId: session,
+        }
+      });
 
-  // anfrage für alle verfügbaren Effekte (getestet, es funktioniert)
-  requestAllEffects() {
-    this.getAllEffects().subscribe((data: Array<string>) => {
-      this.effects = data;
-    }, error => {
-      this.handleError(error);
+    dialogRef.afterClosed().subscribe(data => {
+      if(data != undefined) {
+        this.client = data;
+        // funktioniert noch nicht
+        /*
+        this.currentSubscription = this.client.client.subscribe('/app/jamsession/' + data.sessionId, (message) => {
+          console.log('test');
+          console.log(message);
+        }, error => {
+          this.errorBoolean = true;
+        });*/
+        this.client.client.send('/app/jamsession/' + data.sessionId + '/sendChatMessage',
+        {},
+        JSON.stringify({sender: data.user, type: 'JOIN'})
+        );
+      }
     });
   }
 
   openCreateDialog() {
     const dialogRef = this.dialog.open(CreateDialogComponent,
       {
-        // panelClass: 'create-dialog', // this is a css class from styles.css
+        width: '500px',
+        panelClass: 'create-dialog', // this is a css class from styles.css
+        data: {
+          onlyJoin: false
+        }
       });
 
     dialogRef.afterClosed().subscribe(data => {
-
-      });
+      if(data != undefined) {
+        this.client = data;
+        // funktioniert noch nicht
+        /*
+        this.currentSubscription = this.client.client.subscribe('/app/jamsession/' + data.sessionId, (message) => {
+          console.log('test');
+          console.log(message);
+        }, error => {
+          this.errorBoolean = true;
+        });*/
+      }
+    });
   }
 
-  // hinzufügen von sound an einen player (nicht getestet)
-  /*postSoundToPlayer(playerName: string, instrumenttype: string, effectType: string, pitchtype: string) {
-    if (instrumenttype !== null && effectType !== null && pitchtype !== null) {
-       const sound: SoundInterface = {effect: effectType, instrumentType: instrumenttype, pitchType: pitchtype};
-    } else {
-      // iwie noch ein error anzeigen
-    }
-    if (this.selectedSessionName !== null && playerName !== null) {
-        this.addSoundToPlayer(this.selectedSessionName, playerName, sound)
-    } else {
-      // iwie noch ein Error anzeigen
-    }
-  }*/
+
+  private updateSoundIdList() {
+    this.getAllSoundIdsForSession(this.client.sessionId,this.client.password).subscribe(response => {
+      this.client.sounds = response;
+      console.log(this.client.sounds);
+    }, error => {
+      //handle error
+    });
+  }
 }

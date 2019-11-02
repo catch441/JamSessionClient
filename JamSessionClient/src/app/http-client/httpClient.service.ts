@@ -19,26 +19,32 @@ export class HttpClientService implements OnInit {
     getAllPitches(): Observable<Array<string>> {
       return this.http.get<Array<string>>('http://localhost:8080/pitches');
     }
-    // http anfrage für alle soundfiles in einer session
-    // noch nicht getestet
-    // Rückgabetyp unklar!!!!!!!!!!!!!!!!!!
+    // http anfrage für eine soundfile
     getSoundFile(instrument: string, pitch: string, effect: string): Observable<Blob> {
       // tslint:disable-next-line:max-line-length
       return this.http.get('http://localhost:8080/jamSessionSoundFiles?instrumentType=' + instrument
                             + '&pitchType=' + pitch + '&effectType=' + effect, { responseType: 'blob' });
     }
+    //http Anfrage für alle Sound Ids einer Session
+    getAllSoundIdsForSession(sessionId: string,password: string): Observable<Array<SoundInterface>> {
+      return this.http.get<Array<SoundInterface>>('http://localhost:8080/jamSessionSoundsIds?jamSessionName=' + sessionId + '&password=' + password);
+    }
     // http anfrage für alle verfügbaren Instrumente
     getAllInstruments(): Observable<Array<string>> {
       return this.http.get<Array<string>>('http://localhost:8080/instruments');
     }
-    // http anfrage für alle verfügbaren Effekte
-    getAllEffects(): Observable<Array<string>> {
-      return this.http.get<Array<string>>('http://localhost:8080/effects');
+    // http anfrage für alle verfügbaren Effekte für ein Instrument // nicht für DRUM nutzen
+    getAllEffectsByInstrument(instrument: string): Observable<Array<string>> {
+      return this.http.get<Array<string>>('http://localhost:8080/effects?instrumentType=' + instrument);
+    }
+    // http anfrage für alle verfügbaren Effekte nur für Drum 
+    getAllEffectsByDrumPitch(pitch: string): Observable<Array<string>> {
+      return this.http.get<Array<string>>('http://localhost:8080/drumEffects?pitchType=' + pitch);
     }
     // http post um Sound zu einem Spieler hinzuzufügen
-    addSoundToPlayer(jamSessionName: string, playerName: string, sound: SoundInterface): Observable<any> {
+    addSoundsToPlayer(jamSessionName: string, playerName: string,password: string, sounds: Array<SoundInterface>): Observable<any> {
       // tslint:disable-next-line:max-line-length
-      return this.http.post<any>('http://localhost:8080/jamSessionSounds?jamSessionName=' + jamSessionName + '&player=' + playerName, sound);
+      return this.http.post<any>('http://localhost:8080/jamSessionSounds?jamSessionName=' + jamSessionName + "&password=" + password + '&player=' + playerName, sounds);
     }
     // handles response errors from request
   handleError(error: HttpErrorResponse) {

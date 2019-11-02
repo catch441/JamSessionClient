@@ -1,2 +1,97 @@
-
-<button mat-raised-button (click)="createSession()">create</button>
+<mat-label class="text"><strong>JamSession</strong></mat-label>
+<p></p>
+<mat-divider></mat-divider>
+<p></p>
+<mat-form-field *ngIf="!onlyJoin" class="fields" appearance="outline" floatLabel="always">
+    <mat-label><strong>Session Name</strong></mat-label>
+    <input [formControl]="sessionNameFormControl" matInput placeholder="Session Name">            
+</mat-form-field>
+<mat-form-field class="fields" appearance="outline" floatLabel="always">
+    <mat-label><strong>Passwort</strong></mat-label>
+    <input [formControl]="passwordFormControl" matInput placeholder="Passwort" type="password">            
+</mat-form-field>
+<mat-error *ngIf="errorBoolean">Fehler beim Erstellen/Beitreten der Session!</mat-error>
+<p></p>
+<mat-label class="text"><strong>Deine Spielereinstellungen</strong></mat-label>
+<p></p>
+<mat-divider></mat-divider>
+<p></p>
+<mat-form-field class="fields" appearance="outline" floatLabel="always">
+    <mat-label><strong>Dein Nutzername</strong></mat-label>
+    <input [formControl]="nameFormControl" matInput placeholder="username">            
+</mat-form-field>
+<p></p>
+<mat-form-field class="fields" appearance="outline" floatLabel="always">
+    <mat-label><strong>Instrument auswählen</strong></mat-label>
+    <mat-select [formControl]="instrumentFormControl" matInput placeholder="auswählen" (selectionChange)="onSelectInstrument(instrumentFormControl.value)">
+        <mat-option *ngFor="let instrument of instruments" [value]="instrument">
+            {{instrument}}
+        </mat-option>
+    </mat-select>          
+</mat-form-field>
+<mat-form-field *ngIf="instrumentIsSelected && !isDrum" class="fields" appearance="outline" floatLabel="always">
+    <mat-label><strong>Effekt auswählen</strong></mat-label>
+    <mat-select [formControl]="effectFormControl" matInput placeholder="auswählen" required>
+        <mat-option *ngFor="let effect of effects" [value]="effect">
+            {{effect}}
+        </mat-option>
+    </mat-select>            
+</mat-form-field>
+<p></p>
+<div *ngIf="instrumentIsSelected && isDrum">
+    <mat-form-field class="fields" appearance="outline" floatLabel="always">
+        <mat-label><strong>Effekt für "CRASH" auswählen</strong></mat-label>
+        <mat-select [formControl]="crashEffectFormControl" matInput placeholder="auswählen">
+            <mat-option *ngFor="let effect of crashEffectList" [value]="effect">
+                {{effect}}
+            </mat-option>
+        </mat-select>            
+    </mat-form-field>
+    <mat-form-field class="fields" appearance="outline" floatLabel="always">
+        <mat-label><strong>Effekt für "TOM" auswählen</strong></mat-label>
+        <mat-select [formControl]="tomEffectFormControl" matInput placeholder="auswählen">
+            <mat-option *ngFor="let effect of tomEffectList" [value]="effect">
+                {{effect}}
+            </mat-option>
+        </mat-select>            
+    </mat-form-field>
+    <mat-form-field class="fields" appearance="outline" floatLabel="always">
+        <mat-label><strong>Effekt für "HITHAT" auswählen</strong></mat-label>
+        <mat-select [formControl]="hithatEffectFormControl" matInput placeholder="auswählen">
+            <mat-option *ngFor="let effect of hithatEffectList" [value]="effect">
+                {{effect}}
+            </mat-option>
+        </mat-select>            
+    </mat-form-field>
+    <mat-form-field class="fields" appearance="outline" floatLabel="always">
+        <mat-label><strong>Effekt für SNARE auswählen</strong></mat-label>
+        <mat-select [formControl]="snareEffectFormControl" matInput placeholder="auswählen">
+            <mat-option *ngFor="let effect of snareEffectList" [value]="effect">
+                {{effect}}
+            </mat-option>
+        </mat-select>            
+    </mat-form-field>
+    <mat-form-field class="fields" appearance="outline" floatLabel="always">
+        <mat-label><strong>Effekt für "KICK" auswählen</strong></mat-label>
+        <mat-select [formControl]="kickEffectFormControl" matInput placeholder="auswählen">
+            <mat-option *ngFor="let effect of kickEffectList" [value]="effect">
+                {{effect}}
+            </mat-option>
+        </mat-select>            
+    </mat-form-field>
+</div>
+<mat-radio-group *ngIf="instrumentIsSelected && !isDrum" [disabled]="effectFormControl.status == 'INVALID'" [formControl]="octaveFormControl" required>
+    <mat-label><strong>Wähle 2 Oktaven aus</strong></mat-label>
+    <mat-radio-button [value]="1">1/2</mat-radio-button>
+    <mat-radio-button [value]="2">2/3</mat-radio-button>
+    <mat-radio-button [value]="3">3/4</mat-radio-button>
+    <mat-radio-button [value]="4">4/5</mat-radio-button>
+</mat-radio-group>
+<p></p>
+<mat-divider></mat-divider>
+<p></p>
+<button mat-raised-button class="closeButton" (click)="closeDialog()" >Zurück</button>
+<button mat-raised-button class="createButton" *ngIf="!onlyJoin && !spinningBool!" (click)="createJoinSession()" >Erstellen</button>
+<button mat-raised-button class="joinButton" *ngIf="onlyJoin && !spinningBool!" (click)="createJoinSession()" >Beitreten</button>
+<p></p>
+<mat-spinner *ngIf="spinningBool" [diameter]="20"> </mat-spinner>
