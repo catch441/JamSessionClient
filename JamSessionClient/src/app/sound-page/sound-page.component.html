@@ -2,8 +2,9 @@
   <mat-card-title>
     Hier kannst dir einmal eine Auswahl an Sounds anhören
   </mat-card-title>
-  <td *ngFor="let sound of allSounds">
-    <button mat-raised-button (click)="playSound(sound.src)" class="buttons">...........</button>
-    <mat-label>{{sound.name}}</mat-label>
-    </td>
+  <mat-grid-list cols="6" rowHeight="50px" colWidth="100px">
+      <mat-grid-tile *ngFor="let sound of allAudioFiles">
+          <button mat-raised-button class="buttons" (click)="requestAllSounds(sound.instrumentType, sound.pitchType, sound.effect)">{{sound.instrumentType}}-{{sound.pitchType}}-{{sound.effect}}</button>
+      </mat-grid-tile>
+    </mat-grid-list>
 </mat-card>
