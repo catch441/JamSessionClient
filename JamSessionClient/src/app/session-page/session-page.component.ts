@@ -54,7 +54,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
             case 'KeyE': tune = 'E_' + this.client.octave; break; // e
             case 'KeyR': tune = 'F_' + this.client.octave; break; // f
             case 'KeyT': tune = 'G_' + this.client.octave; break; // g
-            case 'KeyZ': tune = 'A_' + this.client.octave; break; // a
+            case 'KeyY': tune = 'A_' + this.client.octave; break; // a
             case 'KeyU': tune = 'H_' + this.client.octave; break; // h
             case 'Digit2': tune = 'CIS_DES_' + this.client.octave; break; // cis
             case 'Digit3': tune = 'DIS_ES_' + this.client.octave; break; // dis
@@ -76,7 +76,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
           }
           if(tune != '') {
             var soundMessage = {instrument: this.selectedInstrument,tune: tune,effect: this.selectedEffect,type: 'SOUND'};
-            this.client.client.send('/app/jamsession/' + this.client.sessionId + '/sendChatMessage',
+            this.client.client.send('/app/jamsession/' + this.client.sessionId + '/sendSoundMessage',
             {},
             JSON.stringify(soundMessage)
             );
@@ -138,14 +138,12 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
         this.client = data;
         this.selectedEffect = this.client.sounds[0].effect;
         this.selectedInstrument = this.client.sounds[0].instrumentType;
-        // funktioniert noch nicht
         this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
           const body = JSON.parse(message.body);
-          if(body.type = "JOIN") {
+          if(body.type == "JOIN") {
             this.updateSoundIdList();
-          } else if(body.type = "SOUND") {
-            console.log(body);
-            //this.requestAllSounds(instrument: message.body.instrument, pitch: body.effect, effect: string);
+          } else if(body.type == "SOUND") {
+            this.requestAllSounds(body.instrument,body.tune,body.effect);
           }
         }, error => {
           this.errorBoolean = true;
@@ -175,15 +173,15 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
         this.selectedInstrument = this.client.sounds[0].instrumentType;
         this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
           const body = JSON.parse(message.body);
-          if(body.type = "JOIN") {
+          if(body.type == "JOIN") {
             this.updateSoundIdList();
-          } else if(body.type = 'SOUND') {
+          } else if(body.type == "SOUND") {
             this.requestAllSounds(body.instrument,body.tune,body.effect);
           }
         }, error => {
           this.errorBoolean = true;
         });
-        this.client.client.send('/jamsession/' + data.sessionId + '/sendChatMessage',{},
+        this.client.client.send('/app/jamsession/' + data.sessionId + '/sendChatMessage',{},
         JSON.stringify({sender: data.user, type: 'JOIN'}));
       }
     });
