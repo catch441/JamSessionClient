@@ -1,7 +1,6 @@
 .soundCard {
-    width: 90%;
-    margin-top: 2%;
-    margin-left: 4%;
+    background-color:rgba(139,102,139, 0.6);
+    color: white;
 }
 .buttons {
     margin: 1%;

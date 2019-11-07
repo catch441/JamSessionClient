@@ -50,3 +50,7 @@
 .gridtilesize {
     width: fit-content;
 }
+.instrumentButton {
+    background-color: rgb(74.1,12.9,55.7);
+    color: white;
+}
