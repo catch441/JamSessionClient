@@ -1,13 +1,10 @@
 .soundCard {
-    width: 90%;
-    margin-top: 2%;
-    margin-left: 4%;
+    background-color:rgba(139,102,139, 0.6);
+    color: white;
 }
 .buttons {
-    margin: 1%;
-    background-image: url('../../assets/soundButtonGif.gif');
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-color: rgb(74.1,12.9,55.7);
+    color: white;
 }
 .buttons:hover {
     box-shadow: 0 0 11px rgba(33,33,33,.2);
