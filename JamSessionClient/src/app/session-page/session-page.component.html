@@ -19,3 +19,11 @@
       <div class="sessionListDivider"></div>
     </div>
 </mat-card>
+
+<mat-card class="sessionCardContent" *ngIf="client != null">
+  <mat-grid-list cols="4" rowHeight="50px">
+    <mat-grid-tile *ngFor="let sound of client.sounds">
+        <button mat-raised-button (click)="requestAllSounds(sound.instrumentType, sound.pitchType, sound.effect)">{{sound.instrumentType}}-{{sound.pitchType}}-{{sound.effect}}</button>
+    </mat-grid-tile>
+  </mat-grid-list>
+</mat-card>

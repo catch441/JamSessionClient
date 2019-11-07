@@ -50,10 +50,10 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
     });
   }
 
-  // Anfrage für alle verfügbaren Soundfiles (nicht getestet)
-  requestAllSounds() {
+  // Anfrage für alle verfügbaren Soundfiles (getestet)
+  requestAllSounds(instrument: string, pitch: string, effect: string) {
     if (this.selectedSessionName !== null && this.playerName !== null) {
-      this.getSoundFile('DRUM', 'CRASH', 'NOISE').subscribe((data: Blob) => {
+      this.getSoundFile(instrument, pitch, effect).subscribe((data: Blob) => {
         const blob = new Blob([data], { type : 'audio/wav; codecs=0' });
         const url = URL.createObjectURL(blob);
         const audio = new Audio();

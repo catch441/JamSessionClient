@@ -47,3 +47,6 @@
 .joinButton {
     margin-left: 10px;
 }
+.gridtilesize {
+    width: fit-content;
+}
