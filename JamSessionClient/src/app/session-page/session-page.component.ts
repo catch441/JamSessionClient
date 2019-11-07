@@ -6,6 +6,13 @@ import { CreateDialogComponent } from '../create-dialog/create-dialog.component'
 import { SessionClient } from '../create-dialog/SessionClient';
 import { StompSubscription } from '@stomp/stompjs';
 
+interface SoundMessage {
+  instrument: string,
+  tune: string,
+  effect: string,
+  type: string
+}
+
 @Component({
   selector: 'app-session-page',
   templateUrl: './session-page.component.html',
@@ -23,6 +30,9 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   selectedSessionName: string;
   playerName: string;
 
+  selectedEffect: string;
+  selectedInstrument: string;
+
   client: SessionClient;
   subscription: StompSubscription;
 
@@ -33,32 +43,44 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   ngOnInit() {
     this.requestAllSessions();
     document.addEventListener('keypress',e => {
+
+
       if(this.client != null) {
-        switch(e.code) {
-          case 'q': break; // c
-          case 'w': break; // d
-          case 'e': break; // e
-          case 'r': break; // f
-          case 't': break; // g
-          case 'z': break; // a
-          case 'u': break; // h
-          case '2': break; // cis
-          case '3': break; // dis
-          case '5': break; // fis
-          case 'w': break; // gis
-          case '7': break; // ais
-          case 'v': break; // c
-          case 'b': break; // d
-          case 'n': break; // e
-          case 'm': break; // f
-          case ',': break; // g
-          case '.': break; // a
-          case '-': break; // h
-          case 'g': break; // cis
-          case 'h': break; // dis
-          case 'k': break; // fis
-          case 'l': break; // gis
-          case 'ö': break; // ais
+        if(this.selectedInstrument != 'DRUM') {
+          var tune = '';
+          switch(e.code) {
+            case 'q': tune = 'C_' + this.client.octave; break; // c
+            case 'w': tune = 'D_' + this.client.octave; break; // d
+            case 'e': tune = 'E_' + this.client.octave; break; // e
+            case 'r': tune = 'F_' + this.client.octave; break; // f
+            case 't': tune = 'G_' + this.client.octave; break; // g
+            case 'z': tune = 'A_' + this.client.octave; break; // a
+            case 'u': tune = 'H_' + this.client.octave; break; // h
+            case '2': tune = 'CIS_DES_' + this.client.octave; break; // cis
+            case '3': tune = 'DIS_ES_' + this.client.octave; break; // dis
+            case '5': tune = 'FIS_GES_' + this.client.octave; break; // fis
+            case 'w': tune = 'GIS_AS_' + this.client.octave; break; // gis
+            case '7': tune = 'AIS_B_' + this.client.octave; break; // ais
+            case 'v': tune = 'C_' + (this.client.octave + 1); break; // c
+            case 'b': tune = 'D_' + (this.client.octave + 1); break; // d
+            case 'n': tune = 'E_' + (this.client.octave + 1); break; // e
+            case 'm': tune = 'F_' + (this.client.octave + 1); break; // f
+            case ',': tune = 'G_' + (this.client.octave + 1); break; // g
+            case '.': tune = 'A_' + (this.client.octave + 1); break; // a
+            case '-': tune = 'H_' + (this.client.octave + 1); break; // h
+            case 'g': tune = 'CIS_DES_' + (this.client.octave + 1); break; // cis
+            case 'h': tune = 'DIS_ES_' + (this.client.octave + 1); break; // dis
+            case 'k': tune = 'FIS_GES_' + (this.client.octave + 1); break; // fis
+            case 'l': tune = 'GIS_AS_' + (this.client.octave + 1); break; // gis
+            case 'ö': tune = 'AIS_B_' + (this.client.octave + 1); break; // ais
+          }
+          var soundMessage = {instrument: this.selectedInstrument,tune: tune,effect: this.selectedEffect,type: 'SOUND'};
+          this.client.client.send('/app/jamsession/' + this.client.sessionId + '/sendChatMessage',
+          {},
+          JSON.stringify(soundMessage)
+          );
+        } else {
+          // TODO DRUM
         }
       }
     });
@@ -112,11 +134,15 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
     dialogRef.afterClosed().subscribe(data => {
       if(data != undefined) {
         this.client = data;
+        this.selectedEffect = this.client.sounds[0].effect;
         // funktioniert noch nicht
         this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
           const body = JSON.parse(message.body);
           if(body.type = "JOIN") {
             this.updateSoundIdList();
+          } else if(body.type = "SOUND") {
+            console.log(body);
+            //this.requestAllSounds(instrument: message.body.instrument, pitch: body.effect, effect: string);
           }
         }, error => {
           this.errorBoolean = true;
@@ -142,10 +168,14 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
     dialogRef.afterClosed().subscribe(data => {
       if(data != undefined) {
         this.client = data;
+        this.selectedEffect = this.client.sounds[0].effect;
         this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
           const body = JSON.parse(message.body);
           if(body.type = "JOIN") {
             this.updateSoundIdList();
+          } else if(body.type = 'SOUND') {
+            console.log(body);
+            //TODO
           }
         }, error => {
           this.errorBoolean = true;

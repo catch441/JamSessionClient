@@ -6,5 +6,6 @@ export interface SessionClient {
     client: Stomp.Client,
     sessionId: string,
     password: string,
+    octave ?: string,
     sounds: SoundInterface[]
 }
