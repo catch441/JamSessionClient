@@ -128,7 +128,7 @@ export class CreateDialogComponent extends HttpClientService implements OnInit {
   private sessionNoDrum() {
     const octave1 = this.octaveFormControl.value;
     const octave2 = this.octaveFormControl.value + 1;
-    const data = {octave: octave1, user: this.nameFormControl.value,client: this.client,sessionId: this.sessionId, password: this.passwordFormControl.value,sounds: [
+    const data = {user: this.nameFormControl.value,client: this.client,sessionId: this.sessionId, password: this.passwordFormControl.value,octave: octave1,sounds: [
       {effect: this.effectFormControl.value, instrumentType: this.instrumentFormControl.value, pitchType: "C_" + octave1,data: null},
       {effect: this.effectFormControl.value, instrumentType: this.instrumentFormControl.value, pitchType: "CIS_DES_" + octave1,data: null},
       {effect: this.effectFormControl.value, instrumentType: this.instrumentFormControl.value, pitchType: "D_" + octave1,data: null},

@@ -49,36 +49,38 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
         if(this.selectedInstrument != 'DRUM') {
           var tune = '';
           switch(e.code) {
-            case 'q': tune = 'C_' + this.client.octave; break; // c
-            case 'w': tune = 'D_' + this.client.octave; break; // d
-            case 'e': tune = 'E_' + this.client.octave; break; // e
-            case 'r': tune = 'F_' + this.client.octave; break; // f
-            case 't': tune = 'G_' + this.client.octave; break; // g
-            case 'z': tune = 'A_' + this.client.octave; break; // a
-            case 'u': tune = 'H_' + this.client.octave; break; // h
-            case '2': tune = 'CIS_DES_' + this.client.octave; break; // cis
-            case '3': tune = 'DIS_ES_' + this.client.octave; break; // dis
-            case '5': tune = 'FIS_GES_' + this.client.octave; break; // fis
-            case 'w': tune = 'GIS_AS_' + this.client.octave; break; // gis
-            case '7': tune = 'AIS_B_' + this.client.octave; break; // ais
-            case 'v': tune = 'C_' + (this.client.octave + 1); break; // c
-            case 'b': tune = 'D_' + (this.client.octave + 1); break; // d
-            case 'n': tune = 'E_' + (this.client.octave + 1); break; // e
-            case 'm': tune = 'F_' + (this.client.octave + 1); break; // f
-            case ',': tune = 'G_' + (this.client.octave + 1); break; // g
-            case '.': tune = 'A_' + (this.client.octave + 1); break; // a
-            case '-': tune = 'H_' + (this.client.octave + 1); break; // h
-            case 'g': tune = 'CIS_DES_' + (this.client.octave + 1); break; // cis
-            case 'h': tune = 'DIS_ES_' + (this.client.octave + 1); break; // dis
-            case 'k': tune = 'FIS_GES_' + (this.client.octave + 1); break; // fis
-            case 'l': tune = 'GIS_AS_' + (this.client.octave + 1); break; // gis
-            case 'ö': tune = 'AIS_B_' + (this.client.octave + 1); break; // ais
+            case 'KeyQ': tune = 'C_' + this.client.octave; break; // c
+            case 'KeyW': tune = 'D_' + this.client.octave; break; // d
+            case 'KeyE': tune = 'E_' + this.client.octave; break; // e
+            case 'KeyR': tune = 'F_' + this.client.octave; break; // f
+            case 'KeyT': tune = 'G_' + this.client.octave; break; // g
+            case 'KeyZ': tune = 'A_' + this.client.octave; break; // a
+            case 'KeyU': tune = 'H_' + this.client.octave; break; // h
+            case 'Digit2': tune = 'CIS_DES_' + this.client.octave; break; // cis
+            case 'Digit3': tune = 'DIS_ES_' + this.client.octave; break; // dis
+            case 'Digit5': tune = 'FIS_GES_' + this.client.octave; break; // fis
+            case 'Digit6': tune = 'GIS_AS_' + this.client.octave; break; // gis
+            case 'Digit7': tune = 'AIS_B_' + this.client.octave; break; // ais
+            case 'KeyV': tune = 'C_' + (this.client.octave + 1); break; // c
+            case 'KeyB': tune = 'D_' + (this.client.octave + 1); break; // d
+            case 'KeyN': tune = 'E_' + (this.client.octave + 1); break; // e
+            case 'KeyM': tune = 'F_' + (this.client.octave + 1); break; // f
+            case 'Comma': tune = 'G_' + (this.client.octave + 1); break; // g
+            case 'Period': tune = 'A_' + (this.client.octave + 1); break; // a
+            case 'Slash': tune = 'H_' + (this.client.octave + 1); break; // h
+            case 'KeyG': tune = 'CIS_DES_' + (this.client.octave + 1); break; // cis
+            case 'KeyH': tune = 'DIS_ES_' + (this.client.octave + 1); break; // dis
+            case 'KeyK': tune = 'FIS_GES_' + (this.client.octave + 1); break; // fis
+            case 'KeyL': tune = 'GIS_AS_' + (this.client.octave + 1); break; // gis
+            case 'Semicolon': tune = 'AIS_B_' + (this.client.octave + 1); break; // ais
           }
-          var soundMessage = {instrument: this.selectedInstrument,tune: tune,effect: this.selectedEffect,type: 'SOUND'};
-          this.client.client.send('/app/jamsession/' + this.client.sessionId + '/sendChatMessage',
-          {},
-          JSON.stringify(soundMessage)
-          );
+          if(tune != '') {
+            var soundMessage = {instrument: this.selectedInstrument,tune: tune,effect: this.selectedEffect,type: 'SOUND'};
+            this.client.client.send('/app/jamsession/' + this.client.sessionId + '/sendChatMessage',
+            {},
+            JSON.stringify(soundMessage)
+            );
+          }
         } else {
           // TODO DRUM
         }
@@ -135,6 +137,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
       if(data != undefined) {
         this.client = data;
         this.selectedEffect = this.client.sounds[0].effect;
+        this.selectedInstrument = this.client.sounds[0].instrumentType;
         // funktioniert noch nicht
         this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
           const body = JSON.parse(message.body);
@@ -169,13 +172,13 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
       if(data != undefined) {
         this.client = data;
         this.selectedEffect = this.client.sounds[0].effect;
+        this.selectedInstrument = this.client.sounds[0].instrumentType;
         this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
           const body = JSON.parse(message.body);
           if(body.type = "JOIN") {
             this.updateSoundIdList();
           } else if(body.type = 'SOUND') {
-            console.log(body);
-            //TODO
+            this.requestAllSounds(body.instrument,body.tune,body.effect);
           }
         }, error => {
           this.errorBoolean = true;
