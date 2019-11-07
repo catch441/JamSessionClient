@@ -32,6 +32,36 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
 
   ngOnInit() {
     this.requestAllSessions();
+    document.addEventListener('keypress',e => {
+      if(this.client != null) {
+        switch(e.code) {
+          case 'q': break; // c
+          case 'w': break; // d
+          case 'e': break; // e
+          case 'r': break; // f
+          case 't': break; // g
+          case 'z': break; // a
+          case 'u': break; // h
+          case '2': break; // cis
+          case '3': break; // dis
+          case '5': break; // fis
+          case 'w': break; // gis
+          case '7': break; // ais
+          case 'v': break; // c
+          case 'b': break; // d
+          case 'n': break; // e
+          case 'm': break; // f
+          case ',': break; // g
+          case '.': break; // a
+          case '-': break; // h
+          case 'g': break; // cis
+          case 'h': break; // dis
+          case 'k': break; // fis
+          case 'l': break; // gis
+          case 'ö': break; // ais
+        }
+      }
+    });
   }
   // Anfrage für alle Sessions
   requestAllSessions() {
