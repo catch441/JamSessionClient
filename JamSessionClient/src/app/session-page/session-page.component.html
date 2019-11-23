@@ -7,9 +7,6 @@
     <mat-spinner *ngIf="spinningBool" class="spinning"></mat-spinner>
     <p></p>
     <mat-error *ngIf="noSessions">Hoppla, keine Sessions vorhanden</mat-error>
-    <!--table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-    </table-->
 
     <div *ngFor="let session of sessions">
       <mat-card class="sessionListCard">
@@ -20,9 +17,6 @@
     </div>
 </mat-card>
 <mat-card class="sessionCardContent" *ngIf="client != null">
-  <mat-grid-list cols="4" rowHeight="50px">
-    <mat-grid-tile *ngFor="let sound of client.sounds">
-        <button mat-raised-button class="instrumentButton" (click)="requestAllSounds(sound.instrumentType, sound.pitchType, sound.effect)">{{sound.instrumentType}}-{{sound.pitchType}}-{{sound.effect}}</button>
-    </mat-grid-tile>
-  </mat-grid-list>
+  <button mat-raised-button (click)="downloadAllSounds()">download</button>
+  <mat-error *ngIf="newplayer">Bitte Sounds herunterladen! Ein neuer Spieler ist der Session beigetreten.</mat-error>
 </mat-card>

@@ -5,12 +5,19 @@ import { MatDialog } from '@angular/material';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { SessionClient } from '../create-dialog/SessionClient';
 import { StompSubscription } from '@stomp/stompjs';
+import { SoundInterface } from '../http-client/SoundInterface';
+
 
 interface SoundMessage {
   instrument: string,
   tune: string,
   effect: string,
   type: string
+}
+
+interface SoundBlobUrl {
+  blob: Blob,
+  url: string
 }
 
 @Component({
@@ -29,9 +36,13 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   noSessions = false;
   selectedSessionName: string;
   playerName: string;
+  newplayer = false;
+  audio = new Audio();
 
   selectedEffect: string;
   selectedInstrument: string;
+
+  downloadedSounds = new Map<string,SoundBlobUrl>();
 
   client: SessionClient;
   subscription: StompSubscription;
@@ -104,16 +115,13 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
     });
   }
 
-  // Anfrage für alle verfügbaren Soundfiles (getestet)
-  requestAllSounds(instrument: string, pitch: string, effect: string) {
+  // Anfrage für einen Sound
+  requestOneSound(instrument: string, pitch: string, effect: string) {
     if (this.selectedSessionName !== null && this.playerName !== null) {
       this.getSoundFile(instrument, pitch, effect).subscribe((data: Blob) => {
         const blob = new Blob([data], { type : 'audio/wav; codecs=0' });
         const url = URL.createObjectURL(blob);
-        const audio = new Audio();
-        audio.src = url;
-        audio.load();
-        audio.play();
+        this.downloadedSounds.set(instrument + pitch + effect,{blob: blob,url: url});
       }, error => {
         this.handleError(error);
       });
@@ -122,6 +130,15 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
     }
   }
 
+  // läd alle Sounds der aktuellen Session herunter
+  downloadAllSounds() {
+    this.newplayer = false;
+    this.downloadedSounds.clear();
+    for(let sound of this.client.sounds) {
+      this.requestOneSound(sound.instrumentType,sound.pitchType,sound.effect);
+    }
+  }
+ 
   openJoinDialog(session: string) {
     const dialogRef = this.dialog.open(CreateDialogComponent,
       {
@@ -142,8 +159,9 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
           const body = JSON.parse(message.body);
           if(body.type == "JOIN") {
             this.updateSoundIdList();
+            this.newplayer = true;
           } else if(body.type == "SOUND") {
-            this.requestAllSounds(body.instrument,body.tune,body.effect);
+            this.playSound(this.downloadedSounds.get(body.instrument + body.tune + body.effect));
           }
         }, error => {
           this.errorBoolean = true;
@@ -175,8 +193,9 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
           const body = JSON.parse(message.body);
           if(body.type == "JOIN") {
             this.updateSoundIdList();
+            this.newplayer = true;
           } else if(body.type == "SOUND") {
-            this.requestAllSounds(body.instrument,body.tune,body.effect);
+            this.playSound(this.downloadedSounds.get(body.instrument + body.tune + body.effect));
           }
         }, error => {
           this.errorBoolean = true;
@@ -185,6 +204,13 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
         JSON.stringify({sender: data.user, type: 'JOIN'}));
       }
     });
+  }
+
+  // spielt einen schon heruntergeladenen Sound ab
+  playSound(soundBlobUrl: SoundBlobUrl) {
+    this.audio.pause();
+      this.audio.src = soundBlobUrl.url;
+      this.audio.play();    
   }
 
   private updateSoundIdList() {
