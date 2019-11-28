@@ -6,6 +6,7 @@ import { CreateDialogComponent } from '../create-dialog/create-dialog.component'
 import { SessionClient } from '../create-dialog/SessionClient';
 import { StompSubscription } from '@stomp/stompjs';
 import { SoundInterface } from '../http-client/SoundInterface';
+import { FormControl } from '@angular/forms';
 
 
 interface SoundMessage {
@@ -41,10 +42,10 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
   noSessions = false;
   selectedSessionName: string;
   playerName: string;
-  newplayer = false;
   audio = new Audio();
   chatMessages = new Array<ChatMessage>();
-  currentMessage = '';
+  chatFormControl = new FormControl();
+  chatFocus = false;
 
   selectedEffect = new Map<string, string>();
   selectedInstrument: string;
@@ -58,7 +59,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
   constructor(private http2: HttpClient, public dialog: MatDialog) {
     super(http2);
     document.addEventListener('keypress', e => {
-      if (this.client != null) {
+      if (this.client != null && !this.chatFocus) {
         if (this.selectedInstrument !== 'DRUM') {
           let tune = '';
           switch (e.code) {
@@ -140,7 +141,6 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
 
   ngOnInit() {
     this.requestAllSessions();
-    
   }
   // Anfrage für alle Sessions
   requestAllSessions() {
@@ -176,7 +176,6 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
 
   // läd alle Sounds der aktuellen Session herunter
   downloadAllSounds() {
-    this.newplayer = false;
     if (this.selectedInstrument === 'DRUM') {
       this.selectDrumOrNot = true;
     } else {
@@ -214,7 +213,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
           const body = JSON.parse(message.body);
           if (body.type === 'JOIN') {
             this.updateSoundIdList();
-            this.newplayer = true;
+            this.downloadAllSounds()
             this.chatMessages.push( {sender: 'Session', message: body.sender + ' ist der aktuellen JamSession beigetreten!'} );
           } else if (body.type === 'CHAT') {
             this.chatMessages.push( {sender: body.sender, message: body.content} );
@@ -259,7 +258,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
           const body = JSON.parse(message.body);
           if (body.type === 'JOIN') {
             this.updateSoundIdList();
-            this.newplayer = true;
+            this.downloadAllSounds()
             this.chatMessages.push( {sender: 'Session', message: body.sender + ' ist der aktuellen JamSession beigetreten!'} );
           } else if (body.type === 'CHAT') {
             this.chatMessages.push( {sender: body.sender, message: body.content} );
@@ -286,12 +285,13 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
 
   sendChatMessage() {
     this.client.client.send('/app/jamsession/' + this.client.sessionId + '/sendChatMessage', {},
-        JSON.stringify({sender: this.client.user, type: 'CHAT', content: this.currentMessage}));
-        this.currentMessage = '';
+        JSON.stringify({sender: this.client.user, type: 'CHAT', content: this.chatFormControl.value}));
+    this.chatFormControl.setValue('');
   }
 
-  setChatFocus(test) {
-console.log(test);
+  setChatFocus(bool: boolean) {
+    this.chatFocus = bool;
+    console.log(bool);
   }
 
   private updateSoundIdList() {
