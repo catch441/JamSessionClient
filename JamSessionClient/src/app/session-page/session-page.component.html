@@ -18,7 +18,7 @@
 </mat-card>
 <mat-card class="sessionCardContent" *ngIf="client != null">
   <mat-sidenav-container>
-    <mat-sidenav>
+    <mat-sidenav mode="side" opened position="end">
       <button mat-raised-button (click)="downloadAllSounds()">download</button>
       <mat-error *ngIf="newplayer">Bitte Sounds herunterladen! Ein neuer Spieler ist der Session beigetreten.</mat-error>
       <div>
