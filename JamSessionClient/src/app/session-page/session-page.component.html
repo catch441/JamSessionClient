@@ -20,7 +20,8 @@
   <mat-sidenav mode="side" opened position="end">
     <button mat-raised-button (click)="downloadAllSounds()">download</button>
     <mat-error *ngIf="newplayer">Bitte Sounds herunterladen! Ein neuer Spieler ist der Session beigetreten.</mat-error>
-    <div>
+    <div class="chatList" style="overflow-y: scroll;">
+      <p></p>
       <div *ngFor="let message of chatMessages">
         <mat-card class="messageCard">
           <mat-card-header>
@@ -33,6 +34,13 @@
         <div class="messageListDivider"></div>
       </div>
     </div>
+    <div>
+      <mat-form-field appearance="outline"> 
+          <input (onfocus)="setChatFocus($event)" matInput ([ngModel)="currentMessage">
+      </mat-form-field>
+      <button class="chatSendButton" mat-raised-button (click)="sendChatMessage()">Senden</button>
+    </div>
+    {{currentMessage}}
   </mat-sidenav>
   <mat-sidenav-content>
     <img *ngIf="!selectDrumOrNot" src="../../assets/KeyboardLayout.png" height="490" width="980" class="picture">

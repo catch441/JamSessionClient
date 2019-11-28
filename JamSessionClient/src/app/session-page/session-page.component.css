@@ -73,8 +73,21 @@
 }
 .mat-sidenav {
     background: rgba(139,102,139, 0.6);
-    width: 400px;
-    min-width: 400px;
+    width: 420px;
+    min-width: 420px;
+}
+.chatList {
+    height: 390px;
+    min-height: 390px;
+    max-height: 390px;
+}
+.chatSendButton {
+    color: white;
+    background-color: rgb(74.1,12.9,55.7);
+    margin-left: 10px;
+}
+.mat-form-field {
+    margin-left: 10px;
 }
 .picture {
     margin-left: 1%;
