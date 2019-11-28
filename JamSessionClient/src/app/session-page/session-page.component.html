@@ -16,27 +16,26 @@
       <div class="sessionListDivider"></div>
     </div>
 </mat-card>
-<mat-card class="sessionCardContent" *ngIf="client != null">
-  <mat-sidenav-container>
-    <mat-sidenav>
-      <button mat-raised-button (click)="downloadAllSounds()">Download</button>
-      <mat-error *ngIf="newplayer">Bitte Sounds herunterladen! Ein neuer Spieler ist der Session beigetreten.</mat-error>
-      <div>
-        <div *ngFor="let message of chatMessages">
-          <mat-card class="messageCard">
-            <mat-card-header>
-              <strong>{{message.sender}}</strong>
-            </mat-card-header>
-            <mat-card-content>
-              {{message.message}}
-            </mat-card-content>
-          </mat-card>
-          <div class="messageListDivider"></div>
-        </div>
+<mat-sidenav-container *ngIf="client != null">
+  <mat-sidenav mode="side" opened position="end">
+    <button mat-raised-button (click)="downloadAllSounds()">download</button>
+    <mat-error *ngIf="newplayer">Bitte Sounds herunterladen! Ein neuer Spieler ist der Session beigetreten.</mat-error>
+    <div>
+      <div *ngFor="let message of chatMessages">
+        <mat-card class="messageCard">
+          <mat-card-header>
+            <strong>{{message.sender}}</strong>
+          </mat-card-header>
+          <mat-card-content>
+            {{message.message}}
+          </mat-card-content>
+        </mat-card>
+        <div class="messageListDivider"></div>
       </div>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <img *ngIf="!selectedInstrument" src="../../assets/KeyboardLayout.png" height="490" width="980">
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-</mat-card>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <img *ngIf="!selectDrumOrNot" src="../../assets/KeyboardLayout.png" height="490" width="980">
+    <img *ngIf="selectDrumOrNot" src="../../assets/KeyboardLayoutDrums.png" height="490" width="980">
+  </mat-sidenav-content>
+</mat-sidenav-container>

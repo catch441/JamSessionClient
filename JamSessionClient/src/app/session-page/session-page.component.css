@@ -57,11 +57,22 @@
 .messageListDivider {
     border-radius: 0px;
     height: 5px !important;
-    width: 400px;
+    width: 380px;
+    margin-left: 10px;
     background-color: white;
 }
 .messageCard {
     color: white;
     background-color: rgb(74.1,12.9,55.7);
+    width: 350px;
+    margin-left: 10px;
+}
+.mat-sidenav-container {
+    background: rgba(139,102,139, 0.6);
+    height: 70vh;
+}
+.mat-sidenav {
+    background: rgba(139,102,139, 0.6);
     width: 400px;
+    min-width: 400px;
 }
