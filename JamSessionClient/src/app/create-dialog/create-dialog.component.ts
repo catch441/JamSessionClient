@@ -40,7 +40,7 @@ export class CreateDialogComponent extends HttpClientService implements OnInit {
   octaveFormControl = new FormControl('',Validators.required);
 
   onlyJoin = false;
-  errorBoolean = false;
+  static errorBoolean = false;
   isDrum = false;
   instrumentIsSelected = false;
   spinningBool = false;
@@ -90,13 +90,12 @@ export class CreateDialogComponent extends HttpClientService implements OnInit {
   }
 
   private connect(playername: string, sessionId: string, password: string,drum: boolean) {
-    // hier muss noch ne hash funktion rein
     const passwordHash = password;
     this.setCookie('name', playername);
     this.setCookie('sessionId', sessionId);
     this.setCookie('sessionPasswordHash', passwordHash);
-    this.webSocket = new WebSocket('ws://localhost:8080/ws');
-
+      this.webSocket = new WebSocket('ws://localhost:8080/ws');
+      this.webSocket.onerror = this.change();
     this.client = Stomp.over(this.webSocket);
 
     this.client.connect({}, () => {
@@ -106,6 +105,11 @@ export class CreateDialogComponent extends HttpClientService implements OnInit {
         this.sessionNoDrum();
       }
     });
+    
+  }
+
+  change(): any {
+    this.errorBoolean = true;
   }
 
   private sessionWithDrum() {
