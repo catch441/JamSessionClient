@@ -7,7 +7,6 @@
     <mat-spinner *ngIf="spinningBool" class="spinning"></mat-spinner>
     <p></p>
     <mat-error *ngIf="noSessions">Hoppla, keine Sessions vorhanden</mat-error>
-    {{client == null}}
     <div *ngFor="let session of sessions">
       <mat-card class="sessionListCard">
         <div><strong>Session Name: </strong> {{session}}</div>

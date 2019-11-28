@@ -132,7 +132,9 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
     this.chatMessages = [];
     this.selectedInstrument = '';
     this.downloadedSounds.clear();
-    this.client.client.disconnect;
+    this.client.client.disconnect( () => {
+      
+    });
     this.client = null;
   }
 
