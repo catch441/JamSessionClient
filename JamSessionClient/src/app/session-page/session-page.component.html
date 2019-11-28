@@ -17,8 +17,26 @@
     </div>
 </mat-card>
 <mat-card class="sessionCardContent" *ngIf="client != null">
-  <button mat-raised-button (click)="downloadAllSounds()">download</button>
-  <mat-error *ngIf="newplayer">Bitte Sounds herunterladen! Ein neuer Spieler ist der Session beigetreten.</mat-error>
-  <p></p>
-  <img *ngIf="!newplayer" src="../../assets/KeyboardLayout.png" height="490" width="980">
+  <mat-sidenav-container>
+    <mat-sidenav>
+      <button mat-raised-button (click)="downloadAllSounds()">download</button>
+      <mat-error *ngIf="newplayer">Bitte Sounds herunterladen! Ein neuer Spieler ist der Session beigetreten.</mat-error>
+      <div>
+        <div *ngFor="let message of chatMessages">
+          <mat-card class="messageCard">
+            <mat-card-header>
+              <strong>{{message.sender}}</strong>
+            </mat-card-header>
+            <mat-card-content>
+              {{message.message}}
+            </mat-card-content>
+          </mat-card>
+          <div class="messageListDivider"></div>
+        </div>
+      </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <img src="../../assets/KeyboardLayout.png" height="490" width="980">
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </mat-card>

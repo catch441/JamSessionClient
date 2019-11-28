@@ -54,3 +54,14 @@
     background-color: rgb(74.1,12.9,55.7);
     color: white;
 }
+.messageListDivider {
+    border-radius: 0px;
+    height: 5px !important;
+    width: 400px;
+    background-color: white;
+}
+.messageCard {
+    color: white;
+    background-color: rgb(74.1,12.9,55.7);
+    width: 400px;
+}

@@ -9,15 +9,20 @@ import { SoundInterface } from '../http-client/SoundInterface';
 
 
 interface SoundMessage {
-  instrument: string,
-  tune: string,
-  effect: string,
-  type: string
+  instrument: string;
+  tune: string;
+  effect: string;
+  type: string;
+}
+
+interface ChatMessage {
+  sender: string;
+  message: string;
 }
 
 interface SoundBlobUrl {
-  blob: Blob,
-  url: string
+  blob: Blob;
+  url: string;
 }
 
 @Component({
@@ -38,11 +43,12 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   playerName: string;
   newplayer = false;
   audio = new Audio();
+  chatMessages = new Array<ChatMessage>();
 
   selectedEffect: string;
   selectedInstrument: string;
 
-  downloadedSounds = new Map<string,SoundBlobUrl>();
+  downloadedSounds = new Map<string, SoundBlobUrl>();
 
   client: SessionClient;
   subscription: StompSubscription;
@@ -53,13 +59,11 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
 
   ngOnInit() {
     this.requestAllSessions();
-    document.addEventListener('keypress',e => {
-
-
-      if(this.client != null) {
-        if(this.selectedInstrument != 'DRUM') {
-          var tune = '';
-          switch(e.code) {
+    document.addEventListener('keypress', e => {
+      if (this.client != null) {
+        if (this.selectedInstrument !== 'DRUM') {
+          let tune = '';
+          switch (e.code) {
             case 'KeyQ': tune = 'C_' + this.client.octave; break; // c
             case 'KeyW': tune = 'D_' + this.client.octave; break; // d
             case 'KeyE': tune = 'E_' + this.client.octave; break; // e
@@ -85,8 +89,8 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
             case 'KeyL': tune = 'GIS_AS_' + (this.client.octave + 1); break; // gis
             case 'Semicolon': tune = 'AIS_B_' + (this.client.octave + 1); break; // ais
           }
-          if(tune != '') {
-            var soundMessage = {instrument: this.selectedInstrument,tune: tune,effect: this.selectedEffect,type: 'SOUND'};
+          if (tune !== '') {
+            const soundMessage = {instrument: this.selectedInstrument, tune: tune, effect: this.selectedEffect, type: 'SOUND'};
             this.client.client.send('/app/jamsession/' + this.client.sessionId + '/sendSoundMessage',
             {},
             JSON.stringify(soundMessage)
@@ -121,7 +125,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
       this.getSoundFile(instrument, pitch, effect).subscribe((data: Blob) => {
         const blob = new Blob([data], { type : 'audio/wav; codecs=0' });
         const url = URL.createObjectURL(blob);
-        this.downloadedSounds.set(instrument + pitch + effect,{blob: blob,url: url});
+        this.downloadedSounds.set(instrument + pitch + effect, { blob: blob, url: url});
       }, error => {
         this.handleError(error);
       });
@@ -134,11 +138,11 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   downloadAllSounds() {
     this.newplayer = false;
     this.downloadedSounds.clear();
-    for(let sound of this.client.sounds) {
-      this.requestOneSound(sound.instrumentType,sound.pitchType,sound.effect);
+    for (const sound of this.client.sounds) {
+      this.requestOneSound(sound.instrumentType, sound.pitchType, sound.effect);
     }
   }
- 
+
   openJoinDialog(session: string) {
     const dialogRef = this.dialog.open(CreateDialogComponent,
       {
@@ -151,17 +155,22 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
       });
 
     dialogRef.afterClosed().subscribe(data => {
-      if(data != undefined) {
+      if (data !== undefined) {
         this.client = data;
         this.selectedEffect = this.client.sounds[0].effect;
         this.selectedInstrument = this.client.sounds[0].instrumentType;
         this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
           const body = JSON.parse(message.body);
-          if(body.type == "JOIN") {
+          if (body.type === 'JOIN') {
             this.updateSoundIdList();
             this.newplayer = true;
-          } else if(body.type == "SOUND") {
+            this.chatMessages.push( {sender: 'Session', message: body.sender + ' ist der aktuellen JamSession beigetreten!'} );
+          } else if (body.type === 'CHAT') {
+            this.chatMessages.push( {sender: body.sender, message: body.content} );
+          } else if (body.type === 'SOUND') {
             this.playSound(this.downloadedSounds.get(body.instrument + body.tune + body.effect));
+          } else if (body.type === 'LEAVE') {
+            this.chatMessages.push( {sender: 'Session', message: body.sender + ' hat die aktuelle Session verlassen!'} );
           }
         }, error => {
           this.errorBoolean = true;
@@ -185,22 +194,27 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
       });
 
     dialogRef.afterClosed().subscribe(data => {
-      if(data != undefined) {
+      if (data !== undefined) {
         this.client = data;
         this.selectedEffect = this.client.sounds[0].effect;
         this.selectedInstrument = this.client.sounds[0].instrumentType;
         this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
           const body = JSON.parse(message.body);
-          if(body.type == "JOIN") {
+          if (body.type === 'JOIN') {
             this.updateSoundIdList();
             this.newplayer = true;
-          } else if(body.type == "SOUND") {
+            this.chatMessages.push( {sender: 'Session', message: body.sender + ' ist der aktuellen JamSession beigetreten!'} );
+          } else if (body.type === 'CHAT') {
+            this.chatMessages.push( {sender: body.sender, message: body.content} );
+          } else if (body.type === 'SOUND') {
             this.playSound(this.downloadedSounds.get(body.instrument + body.tune + body.effect));
+          } else if (body.type === 'LEAVE') {
+            this.chatMessages.push( {sender: 'Session', message: body.sender + ' hat die aktuelle Session verlassen!'} );
           }
         }, error => {
           this.errorBoolean = true;
         });
-        this.client.client.send('/app/jamsession/' + data.sessionId + '/sendChatMessage',{},
+        this.client.client.send('/app/jamsession/' + data.sessionId + '/sendChatMessage', {},
         JSON.stringify({sender: data.user, type: 'JOIN'}));
       }
     });
@@ -209,15 +223,15 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   // spielt einen schon heruntergeladenen Sound ab
   playSound(soundBlobUrl: SoundBlobUrl) {
     this.audio.pause();
-      this.audio.src = soundBlobUrl.url;
-      this.audio.play();    
+    this.audio.src = soundBlobUrl.url;
+    this.audio.play();
   }
 
   private updateSoundIdList() {
-    this.getAllSoundIdsForSession(this.client.sessionId,this.client.password).subscribe(response => {
+    this.getAllSoundIdsForSession(this.client.sessionId, this.client.password).subscribe(response => {
       this.client.sounds = response;
     }, error => {
-      //handle error
+      // handle error
     });
   }
 }
