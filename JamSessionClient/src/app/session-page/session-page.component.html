@@ -43,6 +43,7 @@
     {{currentMessage}}
   </mat-sidenav>
   <mat-sidenav-content>
-    <img src="../../assets/KeyboardLayout.png" height="490" width="980">
+    <img *ngIf="!selectDrumOrNot" src="../../assets/KeyboardLayout.png" height="490" width="980">
+    <img *ngIf="selectDrumOrNot" src="../../assets/KeyboardLayoutDrums.png" height="490" width="980">
   </mat-sidenav-content>
 </mat-sidenav-container>
