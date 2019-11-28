@@ -44,6 +44,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   newplayer = false;
   audio = new Audio();
   chatMessages = new Array<ChatMessage>();
+  currentMessage = '';
 
   selectedEffect: string;
   selectedInstrument: string;
@@ -225,6 +226,16 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
     this.audio.pause();
     this.audio.src = soundBlobUrl.url;
     this.audio.play();
+  }
+
+  sendChatMessage() {
+    this.client.client.send('/app/jamsession/' + this.client.sessionId + '/sendChatMessage', {},
+        JSON.stringify({sender: this.client.user, type: 'CHAT', content: this.currentMessage}));
+        this.currentMessage = '';
+  }
+
+  setChatFocus(test) {
+console.log(test);
   }
 
   private updateSoundIdList() {
