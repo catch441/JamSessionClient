@@ -209,6 +209,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
         } else {
           this.selectedEffect.set('notdrum', this.client.sounds[0].effect);
         }
+        this.downloadAllSounds();
         this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
           const body = JSON.parse(message.body);
           if (body.type === 'JOIN') {
@@ -254,6 +255,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
         } else {
           this.selectedEffect.set('notdrum', this.client.sounds[0].effect);
         }
+        this.downloadAllSounds();
         this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
           const body = JSON.parse(message.body);
           if (body.type === 'JOIN') {

@@ -90,7 +90,7 @@
 <p></p>
 <mat-divider></mat-divider>
 <p></p>
-<button mat-raised-button class="closeButton" (click)="closeDialog()" >Zurück</button>
+<button mat-raised-button class="closeButton" (click)="closeDialog(undefined)" >Zurück</button>
 <button mat-raised-button class="createButton" *ngIf="!onlyJoin && !spinningBool!" (click)="createJoinSession()" >Erstellen</button>
 <button mat-raised-button class="joinButton" *ngIf="onlyJoin && !spinningBool!" (click)="createJoinSession()" >Beitreten</button>
 <p></p>

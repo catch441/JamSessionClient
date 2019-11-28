@@ -95,7 +95,10 @@ export class CreateDialogComponent extends HttpClientService implements OnInit {
     this.setCookie('sessionId', sessionId);
     this.setCookie('sessionPasswordHash', passwordHash);
       this.webSocket = new WebSocket('ws://localhost:8080/ws');
-      this.webSocket.onerror = this.change();
+      this.webSocket.onerror = () => {
+        this.errorBoolean = true;
+      };
+      
     this.client = Stomp.over(this.webSocket);
 
     this.client.connect({}, () => {
@@ -106,10 +109,6 @@ export class CreateDialogComponent extends HttpClientService implements OnInit {
       }
     });
     
-  }
-
-  change(): any {
-    this.errorBoolean = true;
   }
 
   private sessionWithDrum() {
