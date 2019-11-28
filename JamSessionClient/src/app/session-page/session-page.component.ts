@@ -44,10 +44,10 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   newplayer = false;
   audio = new Audio();
   chatMessages = new Array<ChatMessage>();
-  selectedDrumOrNot: boolean;
 
-  selectedEffect: string;
+  selectedEffect = new Map<string, string>();
   selectedInstrument: string;
+  selectDrumOrNot = false;
 
   downloadedSounds = new Map<string, SoundBlobUrl>();
 
@@ -64,7 +64,6 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
       if (this.client != null) {
         if (this.selectedInstrument !== 'DRUM') {
           let tune = '';
-          this.selectedDrumOrNot = false;
           switch (e.code) {
             case 'KeyQ': tune = 'C_' + this.client.octave; break; // c
             case 'KeyW': tune = 'D_' + this.client.octave; break; // d
@@ -92,14 +91,32 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
             case 'Semicolon': tune = 'AIS_B_' + (this.client.octave + 1); break; // ais
           }
           if (tune !== '') {
-            const soundMessage = {instrument: this.selectedInstrument, tune: tune, effect: this.selectedEffect, type: 'SOUND'};
+            const soundMessage = {instrument: this.selectedInstrument, tune: tune,
+              effect: this.selectedEffect.get('notdrum'), type: 'SOUND'};
             this.client.client.send('/app/jamsession/' + this.client.sessionId + '/sendSoundMessage',
             {},
             JSON.stringify(soundMessage)
             );
           }
         } else {
-          // TODO DRUM
+          if (this.selectedInstrument === 'DRUM') {
+            let tune = '';
+            let effect = '';
+            switch (e.code) {
+              case 'KeyC': tune = 'CRASH'; effect = this.selectedEffect.get('CRASH'); break;
+              case 'KeyV': tune = 'HITHAT'; effect = this.selectedEffect.get('HITHAT'); break;
+              case 'KeyB': tune = 'KICK'; effect = this.selectedEffect.get('KICK'); break;
+              case 'KeyN': tune = 'SNARE'; effect = this.selectedEffect.get('SNARE'); break;
+              case 'KeyM': tune = 'TOM'; effect = this.selectedEffect.get('TOM'); break;
+            }
+            if (tune !== '') {
+              const soundMessage = {instrument: this.selectedInstrument, tune: tune, effect: effect, type: 'SOUND'};
+              this.client.client.send('/app/jamsession/' + this.client.sessionId + '/sendSoundMessage',
+              {},
+              JSON.stringify(soundMessage)
+              );
+            }
+          }
         }
       }
     });
@@ -139,6 +156,11 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   // läd alle Sounds der aktuellen Session herunter
   downloadAllSounds() {
     this.newplayer = false;
+    if (this.selectedInstrument === 'DRUM') {
+      this.selectDrumOrNot = true;
+    } else {
+      this.selectDrumOrNot = false;
+    }
     this.downloadedSounds.clear();
     for (const sound of this.client.sounds) {
       this.requestOneSound(sound.instrumentType, sound.pitchType, sound.effect);
@@ -159,8 +181,14 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
     dialogRef.afterClosed().subscribe(data => {
       if (data !== undefined) {
         this.client = data;
-        this.selectedEffect = this.client.sounds[0].effect;
         this.selectedInstrument = this.client.sounds[0].instrumentType;
+        if ( this.selectedInstrument === 'DRUM') {
+          for (const sound of this.client.sounds) {
+            this.selectedEffect.set(sound.pitchType, sound.effect);
+          }
+        } else {
+          this.selectedEffect.set('notdrum', this.client.sounds[0].effect);
+        }
         this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
           const body = JSON.parse(message.body);
           if (body.type === 'JOIN') {
@@ -198,8 +226,14 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
     dialogRef.afterClosed().subscribe(data => {
       if (data !== undefined) {
         this.client = data;
-        this.selectedEffect = this.client.sounds[0].effect;
         this.selectedInstrument = this.client.sounds[0].instrumentType;
+        if ( this.selectedInstrument === 'DRUM') {
+          for (const sound of this.client.sounds) {
+            this.selectedEffect.set(sound.pitchType, sound.effect);
+          }
+        } else {
+          this.selectedEffect.set('notdrum', this.client.sounds[0].effect);
+        }
         this.subscription = this.client.client.subscribe('/jamsession/' + data.sessionId, message => {
           const body = JSON.parse(message.body);
           if (body.type === 'JOIN') {
