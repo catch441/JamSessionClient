@@ -19,4 +19,6 @@
 <mat-card class="sessionCardContent" *ngIf="client != null">
   <button mat-raised-button (click)="downloadAllSounds()">download</button>
   <mat-error *ngIf="newplayer">Bitte Sounds herunterladen! Ein neuer Spieler ist der Session beigetreten.</mat-error>
+  <p></p>
+  <img *ngIf="!newplayer" src="../../assets/KeyboardLayout.png" height="490" width="980">
 </mat-card>
