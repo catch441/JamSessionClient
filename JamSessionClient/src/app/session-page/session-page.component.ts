@@ -44,6 +44,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
   newplayer = false;
   audio = new Audio();
   chatMessages = new Array<ChatMessage>();
+  selectedDrumOrNot: boolean;
 
   selectedEffect: string;
   selectedInstrument: string;
@@ -63,6 +64,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
       if (this.client != null) {
         if (this.selectedInstrument !== 'DRUM') {
           let tune = '';
+          this.selectedDrumOrNot = false;
           switch (e.code) {
             case 'KeyQ': tune = 'C_' + this.client.octave; break; // c
             case 'KeyW': tune = 'D_' + this.client.octave; break; // d
