@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientService } from '../http-client/httpClient.service';
 import { MatDialog } from '@angular/material';
@@ -30,7 +30,7 @@ interface SoundBlobUrl {
   templateUrl: './session-page.component.html',
   styleUrls: ['./session-page.component.css']
 })
-export class SessionPageComponent extends HttpClientService implements OnInit {
+export class SessionPageComponent extends HttpClientService implements OnInit, OnDestroy {
 
   spinningBool = false;
   sessions: Array<string>;
@@ -56,10 +56,6 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
 
   constructor(private http2: HttpClient, public dialog: MatDialog) {
     super(http2);
-  }
-
-  ngOnInit() {
-    this.requestAllSessions();
     document.addEventListener('keypress', e => {
       if (this.client != null) {
         if (this.selectedInstrument !== 'DRUM') {
@@ -120,6 +116,28 @@ export class SessionPageComponent extends HttpClientService implements OnInit {
         }
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe(); 
+    this.soundfiles = [];
+    this.effects = [];
+    this.pitches = [];
+    this.sessions = [];
+    this.instruments = [];
+    this.selectedSessionName = '';
+    this.playerName = '';
+    this.selectedEffect.clear();
+    this.chatMessages = [];
+    this.selectedInstrument = '';
+    this.downloadedSounds.clear();
+    this.client.client.disconnect;
+    this.client = null;
+  }
+
+  ngOnInit() {
+    this.requestAllSessions();
+    
   }
   // Anfrage für alle Sessions
   requestAllSessions() {

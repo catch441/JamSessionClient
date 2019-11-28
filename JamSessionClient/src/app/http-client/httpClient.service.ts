@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 import { SoundInterface } from './SoundInterface';
 
 export class HttpClientService implements OnInit {
-
+    
     constructor(private http: HttpClient) {}
-
+    
     errorMessage: string;
     errorBoolean = false;
 
