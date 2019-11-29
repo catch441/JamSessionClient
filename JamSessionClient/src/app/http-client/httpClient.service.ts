@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 import { SoundInterface } from './SoundInterface';
 
 export class HttpClientService implements OnInit {
-    
+
     constructor(private http: HttpClient) {}
-    
+
     errorMessage: string;
     errorBoolean = false;
 
@@ -26,7 +26,7 @@ export class HttpClientService implements OnInit {
                             + '&pitchType=' + pitch + '&effectType=' + effect, { responseType: 'blob' });
     }
     // http Anfrage für alle Sound Ids einer Session
-    getAllSoundIdsForSession(sessionId: string,password: string): Observable<Array<SoundInterface>> {
+    getAllSoundIdsForSession(sessionId: string, password: string): Observable<Array<SoundInterface>> {
       // tslint:disable-next-line:max-line-length
       return this.http.get<Array<SoundInterface>>('http://localhost:8080/jamSessionSoundsIds?jamSessionName=' + sessionId + '&password=' + password);
     }
@@ -38,14 +38,14 @@ export class HttpClientService implements OnInit {
     getAllEffectsByInstrument(instrument: string): Observable<Array<string>> {
       return this.http.get<Array<string>>('http://localhost:8080/effects?instrumentType=' + instrument);
     }
-    // http anfrage für alle verfügbaren Effekte nur für Drum 
+    // http anfrage für alle verfügbaren Effekte nur für Drum
     getAllEffectsByDrumPitch(pitch: string): Observable<Array<string>> {
       return this.http.get<Array<string>>('http://localhost:8080/drumEffects?pitchType=' + pitch);
     }
     // http post um Sound zu einem Spieler hinzuzufügen
-    addSoundsToPlayer(jamSessionName: string, playerName: string,password: string, sounds: Array<SoundInterface>): Observable<any> {
+    addSoundsToPlayer(jamSessionName: string, playerName: string, password: string, sounds: Array<SoundInterface>): Observable<any> {
       // tslint:disable-next-line:max-line-length
-      return this.http.post<any>('http://localhost:8080/jamSessionSounds?jamSessionName=' + jamSessionName + "&password=" + password + '&player=' + playerName, sounds);
+      return this.http.post<any>('http://localhost:8080/jamSessionSounds?jamSessionName=' + jamSessionName + '&password=' + password + '&player=' + playerName, sounds);
     }
     // handles response errors from request
   handleError(error: HttpErrorResponse) {

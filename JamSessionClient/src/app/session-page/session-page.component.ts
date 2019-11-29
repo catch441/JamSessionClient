@@ -42,7 +42,6 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
   noSessions = false;
   selectedSessionName: string;
   playerName: string;
-  audio = new Audio();
   chatMessages = new Array<ChatMessage>();
   chatFormControl = new FormControl();
   chatFocus = false;
@@ -121,7 +120,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe(); 
+    this.subscription.unsubscribe();
     this.soundfiles = [];
     this.effects = [];
     this.pitches = [];
@@ -134,7 +133,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
     this.selectedInstrument = '';
     this.downloadedSounds.clear();
     this.client.client.disconnect( () => {
-      
+
     });
     this.client = null;
   }
@@ -214,7 +213,6 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
           const body = JSON.parse(message.body);
           if (body.type === 'JOIN') {
             this.updateSoundIdList();
-            this.downloadAllSounds()
             this.chatMessages.push( {sender: 'Session', message: body.sender + ' ist der aktuellen JamSession beigetreten!'} );
           } else if (body.type === 'CHAT') {
             this.chatMessages.push( {sender: body.sender, message: body.content} );
@@ -260,7 +258,6 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
           const body = JSON.parse(message.body);
           if (body.type === 'JOIN') {
             this.updateSoundIdList();
-            this.downloadAllSounds()
             this.chatMessages.push( {sender: 'Session', message: body.sender + ' ist der aktuellen JamSession beigetreten!'} );
           } else if (body.type === 'CHAT') {
             this.chatMessages.push( {sender: body.sender, message: body.content} );
@@ -280,9 +277,10 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
 
   // spielt einen schon heruntergeladenen Sound ab
   playSound(soundBlobUrl: SoundBlobUrl) {
-    this.audio.pause();
-    this.audio.src = soundBlobUrl.url;
-    this.audio.play();
+    const audio = new Audio();
+    audio.pause();
+    audio.src = soundBlobUrl.url;
+    audio.play();
   }
 
   sendChatMessage() {
@@ -299,6 +297,7 @@ export class SessionPageComponent extends HttpClientService implements OnInit, O
   private updateSoundIdList() {
     this.getAllSoundIdsForSession(this.client.sessionId, this.client.password).subscribe(response => {
       this.client.sounds = response;
+      this.downloadAllSounds();
     }, error => {
       // handle error
     });
